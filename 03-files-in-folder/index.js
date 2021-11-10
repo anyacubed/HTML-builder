@@ -2,37 +2,27 @@ const fs = require("fs");
 const path = require('path');
 let pathToFolder = path.join('03-files-in-folder', 'secret-folder');
 
-fs.promises.readdir("03-files-in-folder/secret-folder", {withFileTypes: true})
-  .then(files => {
+fs.readdir(pathToFolder, (err, files) => {
+
+    if (err) throw err;
     for (let file of files) {
+
       let fileName;
       let fileSize;
       let fileExtension;
 
-      if (file.isFile() == true) {
-        fileName = file.name.split('.').slice(0, -1).join('.');
-        fileExtension = path.extname(file.name).slice(1);
-      } else {
-        continue;
-      }
+      fileName = file.split('.').slice(0, -1).join('.');
+      fileExtension = path.extname(file).slice(1);
 
-      let pathToFile = path.join(pathToFolder, file.name)
+      let pathToFile = path.join(pathToFolder, file)
 
-      fs.promises.stat(pathToFile, (err, stats) => {
+      fs.stat(pathToFile, (err, stats) => {
         if (err) {
           console.log(`File doesn't exist.`);
-        } else {
+        } else if (stats.isFile()) {
           fileSize = stats.size;
+          console.log(`${fileName}-${fileExtension}-${fileSize}`)
         }
       })
-      .then(() => 
-      console.log(`${fileName}-${fileExtension}-${fileSize}`))
-
     }
   })
-  
-  .catch(err => {
-      console.log(err)
-  })
-
-

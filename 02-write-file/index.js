@@ -15,7 +15,7 @@ console.log("Hello!")
 
 rl.on("line", (answer) => {
   if (answer.toLowerCase() !== "exit") {
-    writeableStream.write(`${answer}`);
+    writeableStream.write(`${answer}\n`);
   } else {
     console.log("Goodbye!");
     rl.close();
